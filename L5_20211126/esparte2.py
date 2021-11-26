@@ -22,14 +22,22 @@ class CSVFile():
         return lista_righe
 
 
-class NumericalCSVFile():
+class NumericalCSVFile(CSVFile):
     def get_data(self):
         lista_righe = super().get_data()
         for riga in lista_righe:
-            for elemento in riga:
-                if(riga.index(elemento) != 0):
+            
+            for i,elemento in enumerate(riga):
+                
+                if(i != 0):
                     try:
-                        elemento = float(elemento)
-                    except TypeError:
-                        print('')
+                        riga[i] = float(elemento)
+                    except ValueError:
+                        print('Errore di valore, elemento = {}'.format(elemento))
+                        riga[i] = 0.0
         
+        return lista_righe
+
+
+file = NumericalCSVFile('sales.txt')
+print(file.get_data())
