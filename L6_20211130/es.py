@@ -14,7 +14,7 @@ class CSVFile():
             start = 0
 
         lista_righe = []
-        
+
         try:
             if end is not None:
                 my_file = open(self.name, 'r').readlines()[start:end+1] #end+1 perchè ignoro la riga header
@@ -27,7 +27,6 @@ class CSVFile():
                 if(riga[0] != 'Date'):
                     riga[1] = riga[1].strip()
                     lista_righe.append(riga)
-            
             #my_file.close()
         except OSError:
             print('Impossibile aprire il file "{}"'.format(self.name))
