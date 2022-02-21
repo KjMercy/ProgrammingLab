@@ -1,6 +1,9 @@
 class CSVFile():
     def __init__(self, name):
-        self.name = name
+        if type(name) is not str:
+            raise Exception('Percorso file (name) non di tipo stringa')
+        else:
+            self.name = name
 
     def get_data(self):
         lista_righe = []
@@ -17,7 +20,9 @@ class CSVFile():
 
             my_file.close()
         except OSError:
-            print('Impossibile aprire il file "{}"'.format(self.name))
+            print('OSError: Impossibile aprire il file "{}"'.format(self.name))
+        except Exception:
+            print('Impossibile aprire il file')
 
         return lista_righe
 
@@ -39,6 +44,5 @@ class NumericalCSVFile(CSVFile):
         return lista_righe
 
 
-file = NumericalCSVFile('sales.txt')
-print(file.get_data())
-
+# file = NumericalCSVFile('sales.txt')
+# print(file.get_data())
