@@ -1,6 +1,3 @@
-from os import walk
-
-
 class ExamException(Exception):
     pass
 
