@@ -4,10 +4,7 @@ class ExamException(Exception):
 
 class CSVFile():
     def __init__(self, name):
-        if type(name) is not str:
-            raise Exception("Percorso file (name) non di tipo stringa")
-        else:
-            self.name = name
+        self.name = name
 
     def get_data(self):
         lista_righe = []
@@ -24,7 +21,8 @@ class CSVFile():
 
             my_file.close()
         except OSError:
-            print('Impossibile aprire il file "{}"'.format(self.name))
+            raise ExamException(
+                'Impossibile aprire il file "{}"'.format(self.name))
 
         return lista_righe
 
@@ -124,6 +122,7 @@ def detect_similar_monthly_variations(time_series, years):
 
 # TEST
 time_series_file = CSVTimeSeriesFile(name='data.csv')
+# time_series_file = CSVTimeSeriesFile(name='dat.csv')
 time_series = time_series_file.get_data()
 anni = list(range(1949, 1960))
 
