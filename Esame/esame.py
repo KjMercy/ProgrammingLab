@@ -1,3 +1,6 @@
+import datetime
+
+
 class ExamException(Exception):
     pass
 
@@ -16,7 +19,7 @@ class CSVFile():
                 riga = item.split(',')
 
                 if(riga[0] != 'date'):
-                    riga[1] = riga[1][0:-1]
+                    riga[-1] = riga[-1].strip()
                     lista_righe.append(riga)
 
             my_file.close()
@@ -31,15 +34,18 @@ class NumericalCSVFile(CSVFile):
     def get_data(self):
         lista_righe = super().get_data()
 
-        for riga in lista_righe:
+        for i, riga in enumerate(lista_righe):
 
-            for i, elemento in enumerate(riga):
+            if is_date_valid(riga[0]):
 
-                if(i == 1):
-                    try:
-                        riga[1] = int(elemento)
-                    except ValueError:
-                        riga[1] = 'MISSING'
+                try:
+                    riga[1] = int(riga[1])
+                except ValueError:
+                    riga[1] = 'MISSING'
+
+            else:
+                # riga[1] = 'MISSING'
+                del lista_righe[i]
 
         return lista_righe
 
@@ -57,8 +63,18 @@ class CSVTimeSeriesFile(NumericalCSVFile):
         return lista_righe
 
 
+def is_date_valid(testo_data):
+    flag = True
+    try:
+        datetime.datetime.strptime(testo_data, '%Y-%m')
+    except ValueError:
+        flag = False
+
+    return flag
+
+
 def is_timeseries_ordered(righe):
-    date = [riga[0].replace('-', '') for riga in righe]
+    date = [riga[0].replace('-', '') for riga in righe if riga[1]]
     return True if date == sorted(date) else False
 
 
@@ -125,6 +141,7 @@ time_series_file = CSVTimeSeriesFile(name='data.csv')
 # time_series_file = CSVTimeSeriesFile(name='dat.csv')
 time_series = time_series_file.get_data()
 anni = list(range(1949, 1960))
+# print(time_series)
 
 for i, year in enumerate(anni):
     if year is not anni[-1]:
