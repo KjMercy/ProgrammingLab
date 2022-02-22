@@ -50,10 +50,16 @@ class CSVTimeSeriesFile(NumericalCSVFile):
     def get_data(self):
         lista_righe = super().get_data()
 
-        for riga in lista_righe:
-            pass
+        if not is_timeseries_ordered(lista_righe):
+            raise ExamException('Time series non ordinata')
 
         return lista_righe
+
+
+def is_timeseries_ordered(righe):
+    date = [riga[0].replace('-', '') for riga in righe]
+
+    return True if date == sorted(date) else False
 
 
 def get_monthly_variations(monthly_passengers):
