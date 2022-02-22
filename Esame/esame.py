@@ -53,13 +53,20 @@ class CSVTimeSeriesFile(NumericalCSVFile):
         if not is_timeseries_ordered(lista_righe):
             raise ExamException('Time series non ordinata')
 
+        if timeseries_contains_duplicates(lista_righe):
+            raise ExamException('Presente timestamp duplicato')
+
         return lista_righe
 
 
 def is_timeseries_ordered(righe):
     date = [riga[0].replace('-', '') for riga in righe]
-
     return True if date == sorted(date) else False
+
+
+def timeseries_contains_duplicates(righe):
+    date = [riga[0].replace('-', '') for riga in righe]
+    return True if len(date) != len(set(date)) else False
 
 
 def get_monthly_variations(monthly_passengers):
