@@ -20,7 +20,7 @@ class CSVFile():
 
                 if(riga[0] != 'date'):
                     riga[-1] = riga[-1].strip()
-                    lista_righe.append(riga)
+                    lista_righe.append(riga[0:2])
 
             my_file.close()
         except OSError:
@@ -39,6 +39,7 @@ class NumericalCSVFile(CSVFile):
         for riga in lista_righe:
             try:
                 riga[1] = int(riga[1])
+                riga[1] = 'MISSING' if riga[1] < 0 else riga[1]
             except ValueError:
                 riga[1] = 'MISSING'
 
@@ -56,14 +57,14 @@ class CSVTimeSeriesFile(NumericalCSVFile):
             raise ExamException('Presente timestamp duplicato')
 
         lista_righe = add_missing_timestamps(lista_righe)
+
         # for riga in lista_righe:
-        # print(riga)
+            # print(riga)
 
         return lista_righe
 
 
 def add_missing_timestamps(lista_righe):
-    # TODO: gestire il caso in cui manca del tutto un timestamp
     nuova_lista = []
     for i, riga in enumerate(lista_righe):
 
@@ -153,6 +154,18 @@ def get_monthly_variations(monthly_passengers):
 
 
 def detect_similar_monthly_variations(time_series, years):
+
+    if years[0] > years[1]:
+        years[0], years[1] = years[1], years[0]
+
+    if years[0] != years[1] - 1:
+        raise ExamException('Anni non consecutivi')
+
+    if years[0] == years[1]:
+        raise ExamException('Anni forniti sono equivalenti')
+
+    if not isinstance(years[0], int) or not isinstance(years[1], int):
+        raise ExamException('Anni forniti non validi')
 
     anni_disponibili = [int(data[0][0:4]) for data in time_series]
     if years[0] not in anni_disponibili or years[1] not in anni_disponibili:
