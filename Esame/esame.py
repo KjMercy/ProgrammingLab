@@ -34,18 +34,13 @@ class NumericalCSVFile(CSVFile):
     def get_data(self):
         lista_righe = super().get_data()
 
-        for i, riga in enumerate(lista_righe):
+        lista_righe = remove_invalid_timestamps(lista_righe)
 
-            if is_date_valid(riga[0]):
-
-                try:
-                    riga[1] = int(riga[1])
-                except ValueError:
-                    riga[1] = 'MISSING'
-
-            else:
-                # riga[1] = 'MISSING'
-                del lista_righe[i]
+        for riga in lista_righe:
+            try:
+                riga[1] = int(riga[1])
+            except ValueError:
+                riga[1] = 'MISSING'
 
         return lista_righe
 
@@ -60,7 +55,27 @@ class CSVTimeSeriesFile(NumericalCSVFile):
         if timeseries_contains_duplicates(lista_righe):
             raise ExamException('Presente timestamp duplicato')
 
+        # lista_righe = add_missing_timestamps(lista_righe)
+
         return lista_righe
+
+
+def add_missing_timestamps(lista_righe):
+    # TODO: gestire il caso in cui manca del tutto un timestamp
+    nuova_lista = []
+    for riga in lista_righe:
+        anno = riga[0][0:4]
+        mese = riga[0][5:7]
+        passeggeri = 'MISSING'
+    return nuova_lista
+
+
+def remove_invalid_timestamps(lista_righe):
+    for i, riga in enumerate(lista_righe):
+        if not is_date_valid(riga[0]):
+            del lista_righe[i]
+
+    return lista_righe
 
 
 def is_date_valid(testo_data):
