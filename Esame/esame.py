@@ -187,13 +187,13 @@ def detect_similar_monthly_variations(time_series, years):
 
 
 # TEST
-time_series_file = CSVTimeSeriesFile(name='data.csv')
+# time_series_file = CSVTimeSeriesFile(name='data.csv')
 # time_series_file = CSVTimeSeriesFile(name='dat.csv')
-time_series = time_series_file.get_data()
-anni = list(range(1949, 1960))
+# time_series = time_series_file.get_data()
+# anni = list(range(1949, 1960))
 # print(time_series)
 
-for i, year in enumerate(anni):
-    if year is not anni[-1]:
-        years = [year, anni[i+1]]
-        print(detect_similar_monthly_variations(time_series, years))
+# for i, year in enumerate(anni):
+    # if year is not anni[-1]:
+    # years = [year, anni[i+1]]
+    # print(detect_similar_monthly_variations(time_series, years))
