@@ -55,7 +55,9 @@ class CSVTimeSeriesFile(NumericalCSVFile):
         if timeseries_contains_duplicates(lista_righe):
             raise ExamException('Presente timestamp duplicato')
 
-        # lista_righe = add_missing_timestamps(lista_righe)
+        lista_righe = add_missing_timestamps(lista_righe)
+        # for riga in lista_righe:
+        # print(riga)
 
         return lista_righe
 
@@ -63,10 +65,43 @@ class CSVTimeSeriesFile(NumericalCSVFile):
 def add_missing_timestamps(lista_righe):
     # TODO: gestire il caso in cui manca del tutto un timestamp
     nuova_lista = []
-    for riga in lista_righe:
-        anno = riga[0][0:4]
-        mese = riga[0][5:7]
-        passeggeri = 'MISSING'
+    for i, riga in enumerate(lista_righe):
+
+        if i == (len(lista_righe)-1) and riga[0][5:7] != '12':
+            anno = riga[0][0:4]
+            mese = '12'
+            passeggeri = 'MISSING'
+            riga_mancante = [anno + '-' + mese, passeggeri]
+            lista_righe.append(riga_mancante)
+
+        if i != (len(lista_righe)-1):
+            current_date = riga[0].replace('-', '')
+            next_date = lista_righe[i+1][0].replace('-', '')
+
+            if i == 0 and riga[0][5:7] != '01':
+                anno = riga[0][0:4]
+                mese = '01'
+                passeggeri = 'MISSING'
+                riga_mancante = [anno + '-' + mese, passeggeri]
+                lista_righe.insert(i, riga_mancante)
+
+            if int(riga[0][5:7]) == 12:
+                if int(lista_righe[i+1][0][5:7]) != 1:
+                    anno = lista_righe[i+2][0][0:4]
+                    mese = '01'
+                    passeggeri = 'MISSING'
+                    riga_mancante = [anno + '-' + mese, passeggeri]
+                    lista_righe.insert(i+1, riga_mancante)
+
+            if int(riga[0][5:7]) != 12:
+                if int(current_date) != int(next_date) - 1:
+                    anno = riga[0][0:4]
+                    mese = str(int(riga[0][5:7])+1).zfill(2)
+                    passeggeri = 'MISSING'
+                    riga_mancante = [anno + '-' + mese, passeggeri]
+                    lista_righe.insert(i+1, riga_mancante)
+
+    nuova_lista = lista_righe
     return nuova_lista
 
 
