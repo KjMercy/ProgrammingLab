@@ -106,9 +106,12 @@ def add_missing_timestamps(lista_righe):
 
 
 def remove_invalid_timestamps(lista_righe):
-    for i, riga in enumerate(lista_righe):
-        if not is_date_valid(riga[0]):
+    i = 0
+    while i < len(lista_righe)-1:
+        if not is_date_valid(lista_righe[i][0]):
             del lista_righe[i]
+        else:
+            i += 1
 
     return lista_righe
 
@@ -187,13 +190,13 @@ def detect_similar_monthly_variations(time_series, years):
 
 
 # TEST
-# time_series_file = CSVTimeSeriesFile(name='data.csv')
+time_series_file = CSVTimeSeriesFile(name='data.csv')
 # time_series_file = CSVTimeSeriesFile(name='dat.csv')
-# time_series = time_series_file.get_data()
-# anni = list(range(1949, 1960))
+time_series = time_series_file.get_data()
+anni = list(range(1949, 1960))
 # print(time_series)
 
-# for i, year in enumerate(anni):
-    # if year is not anni[-1]:
-    # years = [year, anni[i+1]]
-    # print(detect_similar_monthly_variations(time_series, years))
+for i, year in enumerate(anni):
+    if year is not anni[-1]:
+        years = [year, anni[i+1]]
+        print(detect_similar_monthly_variations(time_series, years))
