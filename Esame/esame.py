@@ -8,6 +8,8 @@ class ExamException(Exception):
 class CSVFile():
     def __init__(self, name):
         self.name = name
+        if not isinstance(self.name, str):
+            raise ExamException('Nome file non valido')
 
     def get_data(self):
         lista_righe = []
